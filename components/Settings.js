@@ -1,8 +1,32 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import NavBar from './Navbar';
-
+import React, { useEffect, useState } from 'react';
+import { useUser } from '@clerk/clerk-expo';
+/*
+  return (
+    <View>
+      <Text>First Name: {firstName}</Text>
+      <Text>Last Name: {lastName}</Text>
+      {/* Add other profile information or components here */    
 export default function Homepage({ navigation }) {
+    const { isLoaded, user } = useUser();
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+  
+    useEffect(() => {
+      if (isLoaded && user) {
+        setFirstName(user.firstName || 'N/A');
+        setLastName(user.lastName || 'N/A');
+        setEmail(user.emailAddresses?.length > 0 ? user.emailAddresses[0].emailAddress : 'N/A');
+      }
+    }, [isLoaded, user]);
+  
+    if (!isLoaded) {
+      return <Text>Loading...</Text>;
+    }
+  
   return (
     <SafeAreaView style = {styles.container}>
     <View style={styles.push}/>
@@ -10,8 +34,8 @@ export default function Homepage({ navigation }) {
         <View style={styles.topView}>
           <Image source={require('../assets/Person.png')} style={styles.logo} resizeMode="contain" />
           <View style={styles.textContainer}>
-            <Text style={styles.name}>[Insert Name Here]</Text>
-            <Text style={styles.email}>[Insert E-mail Here]</Text>
+            <Text style={styles.name}>{firstName} {lastName}</Text>
+            <Text style={styles.email}>{email}</Text>
           </View>
         </View>
         <TouchableOpacity style={styles.topButton}  onPress={() => navigation.navigate('Profile')}>
